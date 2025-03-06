@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="Ailogo.png" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AICodePiece</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: white;
+      color: black;
+      font-family: 'Montserrat Regular', sans-serif;
+      font-weight: normal;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      background: linear-gradient(135deg, #252525, #1d1a2c);
+      color: white;
+    }
+
+    .light-mode {
+      background: linear-gradient(135deg, #c9e0e7, #fff7c9cc);
+      color: #000;
+    }
+
+    /* Welcome Overlay Styles */
+    .welcome-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #000428, #004e92);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      z-index: 2000;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 2s ease, visibility 2s ease;
+    }
+
+    .welcome-overlay h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    .welcome-overlay h2 {
+      font-size: 24px;
+      margin-bottom: 40px;
+    }
+
+    .welcome-overlay h3 {
+      font-size: 18px;
+      position: absolute;
+      bottom: 20px;
+    }
+
+    .welcome-hidden {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    /* Header Styles */
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: linear-gradient(135deg, #eb03eb, #13d2df96);
+      box-shadow: 0px 4px 10px rgba(104, 3, 90, 0.507);
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      font-family: 'Arial', sans-serif;
+      height: auto;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-right: auto; /* Pushes the container to the left */
+    }
+    .header .logo {
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #FFFFFF, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block; /* Ensures the logo container takes up the necessary space */
+      padding: 10px 20px;   /* Adjust padding for spacing around the text */
+      border-radius: 20px;   /* Adjust the value for more or less curve */
+      overflow: hidden;
+    }
+
+    .header img {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      margin-right: 10px; /* Added margin to separate the logo and the button */
+    }
+
+    .toggle-button {
+      background-image: linear-gradient(to right, #ffffff, #c2c5c5);
+      border: none;
+      color: rgb(0, 0, 0);
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 20px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+      outline: none;
+      margin-left: auto; /* Added margin to push the button to the right */
+    }
+
+    .dark-mode .toggle-button {
+      background-image: linear-gradient(to right, #333, #555);
+      color: white;
+    }
+
+    /* Content Styles */
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      width: 90%;
+    }
+
+    .content img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      box-shadow: 0px 0px 10px rgba(104, 3, 90, 0.507);
+    }
+
+    .dark-mode .content img {
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .info {
+      text-align: center;
+    }
+
+    .info h1 {
+      font-size: 36px;
+      text-decoration: underline;
+      transition: color 0.3s;
+    }
+
+    .light-mode .info h1 {
+      color: rgb(0, 80, 155);
+    }
+
+    .dark-mode .info h1 {
+      color: yellow;
+    }
+
+    .info p {
+      font-size: 18px;
+      color: black;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* About, Experience, Licenses & Certifications, Honors & Awards Section Styles */
+    .about,
+    .experience,
+    .licenses-certifications,
+    .honors-awards,
+    .projects {
+      width: 90%;
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .about h2,
+    .experience h2,
+    .licenses-certifications h2,
+    .honors-awards h2,
+    .projects h2 {
+      font-size: 28px;
+      background: linear-gradient(45deg, #8c06ca, #777);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .about p,
+    .experience p,
+    .licenses-certifications p,
+    .honors-awards p,
+    .projects p {
+      font-size: 18px;
+      color: rgb(0, 0, 0);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .dark-mode .about h2,
+    .dark-mode .experience h2,
+    .dark-mode .licenses-certifications h2,
+    .dark-mode .honors-awards h2,
+    .dark-mode .projects h2 {
+      background: linear-gradient(45deg, #1add00, #777);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .dark-mode .info p,
+    .dark-mode .about p,
+    .dark-mode .experience p,
+    .dark-mode .licenses-certifications p,
+    .dark-mode .honors-awards p, 
+    .dark-mode .projects p {
+      color: white;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      width: 90%;
+      margin: auto;
+      padding-top: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+      /* Media Query for Responsiveness */
+    @media (max-width: 1024px) {
+      .header {
+        padding: 20px 30px; /* Adjusted padding for smaller screens */
+      }
+
+      .header .logo {
+        font-size: 24px; /* Adjusted font size for smaller screens */
+      }
+
+      .header img {
+        width: 60px; /* Adjusted logo size for smaller screens */
+        height: 60px; /* Adjusted logo size for smaller screens */
+      }
+
+      .toggle-button {
+        padding: 8px 16px; /* Adjusted padding for smaller screens */
+        font-size: 14px; /* Adjusted font size for smaller screens */
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column; /* Stack elements vertically on mobile */
+        align-items: center;
+        padding: 10px 20px;
+      }
+
+      .logo-container {
+        margin-bottom: 10px; /* Margin between container and button */
+      }
+
+      .header .logo {
+        font-size: 24px;
+      }
+
+      .header img {
+        width: 50px;
+        height: 50px;
+      }
+
+      .toggle-button {
+        position: static;
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+
+    /* Experience Section Styles */
+    .experience-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .company-logo img {
+      width: 50px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .experience-details h3 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .experience-details p {
+      font-size: 16px;
+      color: rgb(0, 0, 0);
+      margin-bottom: 5px;
+    }
+
+    .dark-mode .experience-details p {
+      color: white;
+    }
+
+    /* Licenses & Certifications Styles */
+    .certification-item {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .certification-item h3 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .certification-item p {
+      font-size: 16px;
+      color: rgb(0, 0, 0);
+      margin-bottom: 5px;
+    }
+
+    .dark-mode .certification-item p {
+      color: white;
+    }
+
+    /* Honors & Awards Styles */
+    .honors-awards {
+      width: 90%;
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .honors-awards h2 {
+      font-size: 28px;
+      background: linear-gradient(45deg, #8c06ca, #777);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .award-item {
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .award-item h3 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .award-item p {
+      font-size: 16px;
+      color: rgb(0, 0, 0);
+      margin-bottom: 5px;
+    }
+
+    .dark-mode .award-item p {
+      color: white;
+    }
+    /* Projects Section Styles */
+    .projects {
+       width: 90%;
+       text-align: left;
+       margin-top: 20px;
+    }
+
+       .projects h2 {
+       font-size: 28px;
+       background: linear-gradient(45deg, #8c06ca, #777);
+       -webkit-background-clip: text;
+       -webkit-text-fill-color: transparent;
+       margin-bottom: 10px;
+    }
+
+        .project-item {
+        border-bottom: 1px solid #ddd;
+        padding: 15px 0;
+    }
+
+        .project-item h3 {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+
+        .project-item ul {
+        font-size: 16px;
+        color: rgb(0, 0, 0);
+        margin-bottom: 5px;
+        list-style-type: disc;
+        padding-left: 20px;
+    }
+
+        .dark-mode .project-item ul {
+        color: white;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+    .footer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #eb03eb, #13d2df96);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            height: auto;
+            color: white;
+            text-align: center;
+            margin-top: 50px;
+    }
+
+
+    @media (max-width: 1024px) {
+        .footer {
+          padding: 15px; /* Adjust padding for medium screens */
+          font-size: 14px; /* Adjust font size for medium screens */
+       }
+    }
+
+    @media (max-width: 768px) {
+        .footer {
+          flex-direction: column; /* Stack elements vertically on mobile */
+          padding: 10px; /* Adjust padding for smaller screens */
+          font-size: 12px; /* Adjust font size for smaller screens */
+      }
+    }
+
+    .dark-mode .footer {
+        background: linear-gradient(135deg, #eb03eb, #13d2df96);
+        color: #eee;
+    }
+
+  </style>
+</head>
+
+<body class="light-mode">
+  <div class="welcome-overlay" id="welcomeOverlay">
+    <h1>Welcome</h1>
+    <h2>AICodePiece – Where Innovation Meets Ingenuity</h2>
+    <h4>AI-Infused and Creatively Enhanced by Akshay Srivatsava. B</h4>
+  </div>
+
+  <header class="header">
+    <div class="logo">AICodePiece</div>
+    <img src="Ailogo.png" alt="Akshay Logo">
+    <button class="toggle-button" onclick="toggleMode()">Switch Theme</button>
+  </header>
+
+  <div class="main-content">
+    <div class="content">
+      <img src="Photo.jpeg" alt="Your Photo">
+      <div class="info">
+        <h1>Akshay Srivatsava. B</h1>
+        <p>Passionate about AI and digital transformation, pioneering global innovation and redefining the future.</p>
+      </div>
+    </div>
+    <div class="about">
+      <h2>About Me</h2>
+      <p>As a dedicated student of Artificial Intelligence and Machine Learning, pursuing a Bachelor of Engineering degree, I merge technical expertise with creative problem-solving to develop innovative and efficient solutions. Proficient in Python and with a foundational understanding of web technologies such as JavaScript, HTML, and CSS, I employ AI to optimize development processes and elevate the impact of my projects.</p>
+      <p>My portfolio includes a range of applications, web games, and websites, which have collectively earned me recognition as a 'Young Entrepreneur in the Making' by the Narayana Group. Additionally, I earned certifications in AI, machine learning, Python programming, app development, and game development, further validating my technical proficiency.</p>
+      <p>This webpage exemplifies my ability to fuse artificial intelligence with ingenuity and strategic problem-solving, setting new standards for innovation.</p>
+    </div>
+
+    <div class="experience">
+      <h2>Experience</h2>
+      <div class="experience-item">
+        <div class="company-logo">
+          <img src="AdverkLogo.jpeg" alt="Adverk Education Logo">
+        </div>
+        <div class="experience-details">
+          <h3>Campus Ambassador</h3>
+          <p>ADVERK EDUCATION</p>
+          <p>Jan 2025 - Present</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="licenses-certifications">
+      <h2>Professional Certifications</h2>
+      <div class="certification-item">
+        <h3>Fundamentals of AI&ML with Python</h3>
+        <p>GUVI Geek Networks, IITM Research Park</p>
+        <p>Issued Jan 2025</p>
+      </div>
+      <div class="certification-item">
+        <h3>AI Bootcamp Series</h3>
+        <p>Google Cloud Asia Pacific</p>
+        <p>Issued Oct 2024</p>
+      </div>
+      <div class="certification-item">
+        <h3>Demystifying Generative AI for Leaders</h3>
+        <p>Infosys Springboard</p>
+        <p>Issued Aug 2024</p>
+      </div>
+      <div class="certification-item">
+        <h3>AI for India (Guinness World Records)</h3>
+        <p>GUVI Geek Networks, IITM Research Park</p>
+        <p>Issued Apr 2021</p>
+      </div>
+      <div class="certification-item">
+        <h3>Code of Honour (18 under 18 Program)</h3>
+        <p>WhiteHat Jr</p>
+        <p>Issued Apr 2021</p>
+      </div>
+      <div class="certification-item">
+        <h3>FutureLearn Award (University of Leeds)</h3>
+        <p>FutureLearn</p>
+        <p>Issued Jan 2021</p>
+      </div>
+      <div class="certification-item">
+        <h3>Certified App and Game Developer</h3>
+        <p>WhiteHat Jr</p>
+        <p>Issued Aug 2020</p>
+      </div>
+    </div>
+
+    <div class="honors-awards">
+      <h2>Honors & Awards</h2>
+      <div class="award-item">
+        <h3>Letter of Appreciation for Pariksha Pe Charcha 2023 by PM Shri Narendra Modi</h3>
+        <p>Issued by Government of India · Apr 2023</p>
+      </div>
+      <div class="award-item">
+        <h3>The Young Entrepreneur in the App and Game development</h3>
+        <p>Issued by The Narayana Group · Dec 2021</p>
+      </div>
+      <div class="award-item">
+        <h3>Delegate from India at E-MUN 2020</h3>
+        <p>Issued by The Narayana Group · Nov 2020</p>
+      </div>
+      <div class="award-item">
+        <h3>Kala Rathna Award 2014</h3>
+        <p>Issued by Akhil Bhartiya Nagrik Vikas Kendra · Sep 2014</p>
+      </div>
+    </div>
+
+    <div class="projects">
+        <h2>My Projects</h2>
+        <div class="award-item">
+          <h3>Apps</h3>
+          <p>Assessmento App</p>
+        </div>
+        <div class="award-item">
+          <h3>Websites</h3>
+          <p>Assessmento Web, Get Vax</p>
+        </div>
+        <div class="award-item">
+          <h3>Web-apps (Block Based Coding)</h3>
+          <p>Library Management System, World Clock, EquaX, Doctor Appointment, Number Fun Fact</p>
+        </div>
+        <div class="award-item">
+          <h3>Games</h3>
+          <p>ZyberTorque, Akshay's Banana Man, Akshay's Babushka Hotfoot, Plinko Game</p>
+        </div>
+      </div>
+
+  </div>
+
+  <script>
+    function toggleMode() {
+      const body = document.body;
+      const button = document.querySelector(".toggle-button");
+
+      if (body.classList.contains("dark-mode")) {
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        button.style.backgroundImage = "linear-gradient(to right, #ffffff, #c2c5c5)"; // Light mode gradient
+        button.style.color = "black"; // Set text color for light mode
+      } else {
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        button.style.backgroundImage = "linear-gradient(to right, #333, #555)"; // Dark mode gradient
+        button.style.color = "white"; // Set text color for dark mode
+      }
+    }
+
+    window.onload = function() {
+        const overlay = document.getElementById("welcomeOverlay");
+        disableScroll(); // Add this line
+        setTimeout(() => {
+            overlay.classList.add("welcome-hidden");
+            enableScroll(); // Add this line
+        }, 2500);
+    };
+    // Disable scrolling when the welcome overlay is visible
+    function disableScroll() {
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Re-enable scrolling when the welcome overlay is hidden
+        function enableScroll() {
+            document.body.style.overflow = '';
+        }
+
+        window.onload = function() {
+            const overlay = document.getElementById("welcomeOverlay");
+            disableScroll(); // Disable scrolling on load
+
+            setTimeout(() => {
+                overlay.classList.add("welcome-hidden");
+                enableScroll(); // Re-enable scrolling after overlay is hidden
+            }, 2500);
+        };
+  </script>
+  <footer class="footer">
+    <p>&copy; 2025 AICodePiece. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
